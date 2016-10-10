@@ -1,5 +1,3 @@
-# Refine_clean code for exercise from Springboard involving companies and products.  
-
 ## Import data set from the environment section, automatically assigns it to refine_original. 
 
 ## 1. Clean up 'company' column, so all the mispellings of the brand names are standardized.
@@ -88,7 +86,7 @@ while(c <= 25) {
 # For each company
 fac_comp_fixed <- factor(comp_fixed)
 ref_vec <- fac_comp_fixed
-levels(ref_vec) <- 0:3   # did this because, it keeps mentioning invalid factor level if I try to assign 0 or 1 to values like "philips"
+levels(ref_vec) <- 0:3   # did this because, it keeps mentioning invalid factor level if I try to assign 0 or 1 to "philips"
 
 company_philips <- ref_vec 
 a <- 1
