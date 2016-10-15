@@ -1,59 +1,73 @@
 ## Import data set from the environment section, automatically assigns it to refine_original. 
 
+refine_original <- read.csv("refine_original.csv")
+
 ## 1. Clean up 'company' column, so all the mispellings of the brand names are standardized.
 comp_fixed <- refine_original$company
 
-i <- 1
-while(i <= 25) {
-  if(comp_fixed[i] == "Phillips" | comp_fixed[i] == "phillips" | comp_fixed[i] == "phillps" | comp_fixed[i] == "phillipS" | comp_fixed[i] == "fillips" | comp_fixed[i] == "phlips" | comp_fixed[i] == "phllips") {
-    comp_fixed[i] <- "philips"
-  }
-  if(comp_fixed[i] == "Akzo" | comp_fixed[i] == "AKZO" | comp_fixed[i] == "akz0" | comp_fixed[i] == "ak zo") {
-    comp_fixed[i] <- "akzo"
-  } 
-  if(comp_fixed[i] == "Van Houten" | comp_fixed[i] == "van Houten") {
-    comp_fixed[i] <- "van houten"
-  }
-  if(comp_fixed[i] == "unilver" | comp_fixed[i] == "Unilever") {
-    comp_fixed[i] <- "unilever"
-  }
-  i <- i + 1 
-}
+comp <- refine_original$company
+comp[comp == 'Phillips' | comp == "phillips" | comp == "phillps" | comp == "phillipS" | comp == "fillips" | comp == "phlips" | comp == "phllips"] <- 'philips'
+# TODO refactor akzo vanhouten and unilever portions
+
+# i <- 1
+# while(i <= 25) {
+#   if(comp_fixed[i] == "Phillips" | comp_fixed[i] == "phillips" | comp_fixed[i] == "phillps" | comp_fixed[i] == "phillipS" | comp_fixed[i] == "fillips" | comp_fixed[i] == "phlips" | comp_fixed[i] == "phllips") {
+#     comp_fixed[i] <- "philips"
+#   }
+#   if(comp_fixed[i] == "Akzo" | comp_fixed[i] == "AKZO" | comp_fixed[i] == "akz0" | comp_fixed[i] == "ak zo") {
+#     comp_fixed[i] <- "akzo"
+#   } 
+#   if(comp_fixed[i] == "Van Houten" | comp_fixed[i] == "van Houten") {
+#     comp_fixed[i] <- "van houten"
+#   }
+#   if(comp_fixed[i] == "unilver" | comp_fixed[i] == "Unilever") {
+#     comp_fixed[i] <- "unilever"
+#   }
+#   i <- i + 1 
+# }
 
 ## 2. Separate the product code and number into separate columns i.e. add two new columns called product_code 
 # ... and product_number, containing the product code and number respectively. 
 
 product_code <- refine_original$Product.code...number
-product_code <- sub(pattern = "-1", replacement = "", x = product_code)
-product_code <- sub(pattern = "-2", replacement = "", x = product_code)
-product_code <- sub(pattern = "-3", replacement = "", x = product_code)
-product_code <- sub(pattern = "-4", replacement = "", x = product_code)
-product_code <- sub(pattern = "-5", replacement = "", x = product_code)
-product_code <- sub(pattern = "-6", replacement = "", x = product_code)
-product_code <- sub(pattern = "-7", replacement = "", x = product_code)
-product_code <- sub(pattern = "-8", replacement = "", x = product_code)
-product_code <- sub(pattern = "-9", replacement = "", x = product_code)
+product_code <- gsub("[-[:digit:]]+","",product_code)
 
-product_code <- sub(pattern = "1$", replacement = "", x = product_code)
-product_code <- sub(pattern = "2$", replacement = "", x = product_code)
-product_code <- sub(pattern = "3$", replacement = "", x = product_code)
-product_code <- sub(pattern = "4$", replacement = "", x = product_code)
-product_code <- sub(pattern = "5$", replacement = "", x = product_code)
-product_code <- sub(pattern = "6$", replacement = "", x = product_code)
-product_code <- sub(pattern = "7$", replacement = "", x = product_code)
-product_code <- sub(pattern = "8$", replacement = "", x = product_code)
-product_code <- sub(pattern = "9$", replacement = "", x = product_code)
-product_code <- sub(pattern = "0$", replacement = "", x = product_code)
+# product_code <- sub(pattern = "-1", replacement = "", x = product_code)
+# product_code <- sub(pattern = "-2", replacement = "", x = product_code)
+# product_code <- sub(pattern = "-3", replacement = "", x = product_code)
+# product_code <- sub(pattern = "-4", replacement = "", x = product_code)
+# product_code <- sub(pattern = "-5", replacement = "", x = product_code)
+# product_code <- sub(pattern = "-6", replacement = "", x = product_code)
+# product_code <- sub(pattern = "-7", replacement = "", x = product_code)
+# product_code <- sub(pattern = "-8", replacement = "", x = product_code)
+# product_code <- sub(pattern = "-9", replacement = "", x = product_code)
+
+# product_code <- sub(pattern = "1$", replacement = "", x = product_code)
+# product_code <- sub(pattern = "2$", replacement = "", x = product_code)
+# product_code <- sub(pattern = "3$", replacement = "", x = product_code)
+# product_code <- sub(pattern = "4$", replacement = "", x = product_code)
+# product_code <- sub(pattern = "5$", replacement = "", x = product_code)
+# product_code <- sub(pattern = "6$", replacement = "", x = product_code)
+# product_code <- sub(pattern = "7$", replacement = "", x = product_code)
+# product_code <- sub(pattern = "8$", replacement = "", x = product_code)
+# product_code <- sub(pattern = "9$", replacement = "", x = product_code)
+# product_code <- sub(pattern = "0$", replacement = "", x = product_code)
 
 product_number <- refine_original$Product.code...number
-product_number <- sub(pattern = "^p-", replacement = "", x = product_number)
-product_number <- sub(pattern = "^x-", replacement = "", x = product_number)
-product_number <- sub(pattern = "^v-", replacement = "", x = product_number)
-product_number <- sub(pattern = "^q-", replacement = "", x = product_number)
+product_number <- sub(pattern = "^[pxvq]-", replacement = "", x = product_number)
+# product_number <- sub(pattern = "^x-", replacement = "", x = product_number)
+# product_number <- sub(pattern = "^v-", replacement = "", x = product_number)
+# product_number <- sub(pattern = "^q-", replacement = "", x = product_number)
 
 
 ## 3. Add product categories
 product_category <- product_code
+product_category[product_code == 'p','product_code'] <- 'Smartphone'
+# TODO refactor for tv laptop and tablet
+# product_category <- data.frame('code'=product_code)
+# fullnames <- data.frame('abbreviation'=c('p','v','x','q'),
+#                         'fullname'=c('Smartphone','TV','Laptop','Tablet'))
+# merge(product_category,fullnames,by.x='code',by.y='abbreviation', sort=FALSE)
 k <- 1
 while(k <= 25) {
   if(product_category[k] == "p") {
